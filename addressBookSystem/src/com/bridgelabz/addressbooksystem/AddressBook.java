@@ -38,7 +38,7 @@ public class AddressBook implements AddressBookInterface {
 		do {
 			System.out.println("\n Select the operation you want to perform : ");
 			System.out.println(
-					"1.Add To Address Book\n2.Edit Existing Entry\n3.Display contact list");
+					"1.Add To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display contact list");
 			switch (sc.nextInt()) {
 			case 1:
 				addContact();
@@ -47,6 +47,9 @@ public class AddressBook implements AddressBookInterface {
 				editPerson();
 				break;
 			case 3:
+				deletePerson();
+				break;
+			case 4:
 				displayContents();
 				break;
 			default:
@@ -156,6 +159,18 @@ public class AddressBook implements AddressBookInterface {
 		} else {
 			System.out.println(" Name does not exist.");
 		}
+	}
+	@Override
+	public void deletePerson() {
+		System.out.println("Enter first name of person to delete : ");
+		String firstName = sc.next();
+		if (contactList.containsKey(firstName)) {
+			contactList.remove(firstName);
+			System.out.println("Successfully deleted.");
+		} else {
+			System.out.println("Contact not found.");
+		}
+
 	}
 
 	@Override
