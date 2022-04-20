@@ -38,7 +38,7 @@ public class AddressBook implements AddressBookInterface {
 		do {
 			System.out.println("\n Select the operation you want to perform : ");
 			System.out.println(
-					"1.Add To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display contact list");
+					"1.Add To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display Address book\n5.Display Sorted Address Book By Custom Criteria\n6.Write To File\n7.Read From File\n8.Exit Address book System");
 			switch (sc.nextInt()) {
 			case 1:
 				addContact();
@@ -51,6 +51,19 @@ public class AddressBook implements AddressBookInterface {
 				break;
 			case 4:
 				displayContents();
+				break;
+			case 5:
+				System.out.println("In which order you want to display addressbook ?");
+				System.out.println("1.FirstName\n2.City\n3.State\n4.Zip Code");
+				int sortingOrder = sc.nextInt();
+				sortAddressBook(sortingOrder);
+				break;
+			case 6:
+				writeToAddressBookFile();
+				System.out.println("Written To file");
+				break;
+			case 7:
+				readDataFromFile();
 				break;
 			default:
 				changes = false;
@@ -70,7 +83,7 @@ public class AddressBook implements AddressBookInterface {
 			if (entry.getKey().equals(firstName.toLowerCase())) {
 				System.out.println("Contact already exist.");
 				isPresent = true;
-				// return;
+				//return;
 			}
 		});
 
@@ -101,7 +114,7 @@ public class AddressBook implements AddressBookInterface {
 			contactList.put(firstName.toLowerCase(), person);
 		}
 	}
-	
+
 	@Override
 	public void displayContents() {
 		System.out.println("----- Contents of the Address Book " + this.getAddressBookName() + " -----");
@@ -160,6 +173,7 @@ public class AddressBook implements AddressBookInterface {
 			System.out.println(" Name does not exist.");
 		}
 	}
+
 	@Override
 	public void deletePerson() {
 		System.out.println("Enter first name of person to delete : ");
@@ -193,5 +207,82 @@ public class AddressBook implements AddressBookInterface {
 			stateList.add(contact);
 			state.put(contact.getAddress().getState(), stateList);
 		}
+	}
+
+	@Override
+	public void printSortedList(List<Contact> sortedContactList) {
+		System.out.println("------ Sorted Address Book " + this.getAddressBookName() + " ------");
+		Iterator iterator = sortedContactList.iterator();
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
+			System.out.println();
+		}
+		System.out.println("-----------------------------------------");
+
+	}
+
+	@Override
+	public void sortAddressBook(int sortingChoice) {
+		List<Contact> sortedContact;
+		switch (sortingChoice) {
+		case 1:
+			sortedContact = contactList.values().stream().sorted(
+					(firstPerson, secondPerson) -> firstPerson.getFirstName().compareTo(secondPerson.getFirstName()))
+					.collect(Collectors.toList());
+			printSortedList(sortedContact);
+			break;
+		case 2:
+			sortedContact = contactList.values().stream().sorted((firstperson, secondperson) -> firstperson.getAddress()
+					.getCity().compareTo(secondperson.getAddress().getCity())).collect(Collectors.toList());
+			printSortedList(sortedContact);
+			break;
+		case 3:
+			sortedContact = contactList.values().stream().sorted((firstperson, secondperson) -> firstperson.getAddress()
+					.getState().compareTo(secondperson.getAddress().getState())).collect(Collectors.toList());
+			printSortedList(sortedContact);
+			break;
+		case 4:
+			sortedContact = contactList.values().stream()
+					.sorted((firstperson, secondperson) -> Long.valueOf(firstperson.getAddress().getZip())
+							.compareTo(Long.valueOf(secondperson.getAddress().getZip())))
+					.collect(Collectors.toList());
+			printSortedList(sortedContact);
+			break;
+		}
+	}
+
+	@Override
+	public void writeToAddressBookFile() {
+		String bookName = this.getAddressBookName();
+		String fileName = bookName + ".txt";
+
+		StringBuffer addressBookBuffer = new StringBuffer();
+		contactList.values().stream().forEach(contact -> {
+			String personDataString = contact.toString().concat("\n");
+			addressBookBuffer.append(personDataString);
+		});
+		try {
+			Files.write(Paths.get(fileName), addressBookBuffer.toString().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<String> readDataFromFile() {
+		List<String> addressBookList = new ArrayList<String>();
+		String bookName = this.getAddressBookName();
+		String fileName = bookName + ".txt";
+		System.out.println("Reading from : " + fileName + "\n");
+		try {
+			Files.lines(new File(fileName).toPath()).map(line -> line.trim()).forEach(employeeDetails -> {
+				System.out.println(employeeDetails);
+				addressBookList.add(employeeDetails);
+			});
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return addressBookList;
 	}
 }

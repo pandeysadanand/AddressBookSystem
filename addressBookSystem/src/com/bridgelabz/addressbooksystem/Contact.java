@@ -51,5 +51,4 @@ public class Contact {
 		return "Contact [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phoneNumber="
 				+ phoneNumber + "]";
 	}
-
 }
