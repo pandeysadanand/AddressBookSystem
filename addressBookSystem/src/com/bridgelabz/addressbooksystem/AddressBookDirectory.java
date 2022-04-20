@@ -66,6 +66,7 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 		if (addressBookDirectory.containsKey(addressBookToEdit)) {
 			addressBook = addressBookDirectory.get(addressBookToEdit);
 			addressBook.operation();
+			System.out.println("Address book edited successfully.");
 		} else {
 			System.out.println("Book Does Not Exist");
 		}
