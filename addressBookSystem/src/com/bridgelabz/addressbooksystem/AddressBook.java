@@ -14,5 +14,7 @@ public class AddressBook {
 		System.out.println("=====================================================================");
 		System.out.println("-----------------Welcome to address book Program --------------------");
 		System.out.println("=====================================================================");
+		System.out.println();
+		
 	}
 }
