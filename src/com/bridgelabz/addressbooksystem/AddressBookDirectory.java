@@ -21,7 +21,7 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 		do {
 			System.out.println("\nChoose the operation on the Directory you want to perform");
 			System.out.println(
-					"1.Add an Address Book\n2.Edit Existing Address Book\n3.Display Address book Directory\n4.Search Person By Region\n5.Exit Address book System");
+					"1.Add an Address Book\n2.Edit Existing Address Book\n3.Display Address book Directory\n4.Search Person By Regionn\n5.View People By Region\n6.Exit Address book System");
 
 			switch (sc.nextInt()) {
 			case 1:
@@ -36,10 +36,18 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 			case 4:
 				System.out.println("Enter \n1.Search By City\n2.Search By State");
 				int searChoice = sc.nextInt();
-				if(searChoice==1)
+				if (searChoice == 1)
 					searchByCity();
-				else 
+				else
 					searchByState();
+				break;
+			case 5:
+				System.out.println("Enter \n1.Display By City\n2.Display By State");
+				int displayChoice = sc.nextInt();
+				if(displayChoice==1)
+					displayPeopleByRegion(AddressBook.city);
+				else 
+					displayPeopleByRegion(AddressBook.state);
 				break;
 			default:
 				moreChanges = false;
@@ -122,6 +130,21 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 					.forEach(person -> System.out.println(person));
 		}
 
+	}
+
+	/*
+	 * Displaying person by his/her city or state
+	 */
+	public void displayPeopleByRegion(HashMap<String, ArrayList<Contact>> listToDisplay) {
+
+		System.out.println("Enter the name of the region :");
+		String regionName = sc.next();
+
+		listToDisplay.values().stream()
+				.map(region -> region.stream()
+						.filter(person -> person.getAddress().getState().equals(regionName)
+								|| person.getAddress().getCity().equals(regionName)))
+				.forEach(person -> person.forEach(personDetails -> System.out.println(personDetails)));
 	}
 
 	/*
