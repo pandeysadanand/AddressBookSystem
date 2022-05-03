@@ -1,5 +1,6 @@
 package com.bridgelabz.addressbooksystem;
 
+import java.util.ArrayList;
 /*
  * @author: Sadanand Pandey
  */
@@ -20,7 +21,7 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 		do {
 			System.out.println("\nChoose the operation on the Directory you want to perform");
 			System.out.println(
-					"1.Add an Address Book\n2.Edit Existing Address Book\n3.Display Address book Directory\n4.Exit Address book System");
+					"1.Add an Address Book\n2.Edit Existing Address Book\n3.Display Address book Directory\n4.Search Person By Region\n5.Exit Address book System");
 
 			switch (sc.nextInt()) {
 			case 1:
@@ -31,6 +32,14 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 				break;
 			case 3:
 				displayDirectoryContents();
+				break;
+			case 4:
+				System.out.println("Enter \n1.Search By City\n2.Search By State");
+				int searChoice = sc.nextInt();
+				if(searChoice==1)
+					searchByCity();
+				else 
+					searchByState();
 				break;
 			default:
 				moreChanges = false;
@@ -74,6 +83,45 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 		} else {
 			System.out.println("Book Does Not Exist");
 		}
+	}
+
+	/*
+	 * searching person by his/her city name
+	 */
+	public void searchByCity() {
+
+		System.out.println("Enter the name of the City where the Person resides : ");
+		String cityName = sc.next();
+		System.out.println("Enter the name of the Person : ");
+		String personName = sc.next();
+
+		for (AddressBook addressBook : addressBookDirectory.values()) {
+			ArrayList<Contact> contactList = addressBook.getContact();
+			contactList.stream()
+					.filter(person -> person.getFirstName().equals(personName)
+							&& person.getAddress().getCity().equals(cityName))
+					.forEach(person -> System.out.println(person));
+		}
+	}
+
+	/*
+	 * searching person by his/her state name
+	 */
+	public void searchByState() {
+
+		System.out.println("Enter the name of the State where the Person resides : ");
+		String stateName = sc.next();
+		System.out.println("Enter the name of the Person : ");
+		String personName = sc.next();
+
+		for (AddressBook addressBook : addressBookDirectory.values()) {
+			ArrayList<Contact> contactList = ((AddressBook) addressBook).getContact();
+			contactList.stream()
+					.filter(person -> person.getFirstName().equals(personName)
+							&& person.getAddress().getState().equals(stateName))
+					.forEach(person -> System.out.println(person));
+		}
+
 	}
 
 	/*
