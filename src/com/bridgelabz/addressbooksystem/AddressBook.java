@@ -214,6 +214,21 @@ public class AddressBook implements AddressBookInterface {
 								compareTo(secondPerson.getFirstName())).collect(Collectors.toList());
 								printSortedList(sortedContactList);
 								break;
+		case 2:
+			sortedContactList = contactList.values().stream().sorted((firstPerson, secondPerson) -> firstPerson.getAddress()
+								.getCity().compareTo(secondPerson.getAddress().getCity())).collect(Collectors.toList());
+								printSortedList(sortedContactList);
+								break;
+		case 3:
+			sortedContactList = contactList.values().stream().sorted((firstPerson, secondPerson) -> firstPerson.getAddress()
+								.getState().compareTo(secondPerson.getAddress().getState())).collect(Collectors.toList());
+								printSortedList(sortedContactList);
+								break;
+		case 4:
+			sortedContactList = contactList.values().stream().sorted((firstPerson, secondPerson) ->Long.valueOf(firstPerson.getAddress()
+								.getZip()).compareTo(Long.valueOf(secondPerson.getAddress().getZip()))).collect(Collectors.toList());
+								printSortedList(sortedContactList);
+								break;
 		
 		}
 	}
