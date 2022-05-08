@@ -20,11 +20,12 @@ public class AddressBookDirectory implements AddressBookDirectoryInterface {
 		boolean moreChanges = true;
 		do {
 			System.out.println("\nChoose the operation on the Directory you want to perform");
+			System.out.println("=============================================================");
 			System.out.println(
 					"1.Add an Address Book\n2.Edit Existing Address Book\n3.Display Address book Directory\n4.Search Person By Regionn\n5.View People By Region\n6.Count People By Region\n7.Exit Address book System");
 
 			switch (sc.nextInt()) {
-			case 1:
+			case 1: 
 				addAddressBook();
 				break;
 			case 2:
