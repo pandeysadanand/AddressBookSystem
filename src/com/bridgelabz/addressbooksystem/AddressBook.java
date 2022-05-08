@@ -1,5 +1,9 @@
 package com.bridgelabz.addressbooksystem;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -231,5 +235,40 @@ public class AddressBook implements AddressBookInterface {
 								break;
 		
 		}
+	}
+	
+	public void writeDataToFile() {
+		String bookName = this.getAddressBookName();
+		String fileName = bookName+ ".txt";
+		
+		StringBuffer addressBookBuffer = new StringBuffer();
+		contactList.values().stream().forEach(contact -> { String personData = contact.toString().concat("\n");
+		addressBookBuffer.append(personData);
+		});
+		
+		try {
+			Files.write(Paths.get(fileName), addressBookBuffer.toString().getBytes());
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<String> readDataFromFile() {
+		List<String> addressBookList = new ArrayList<String>();
+		String bookName = this.getAddressBookName();
+		String fileName = bookName+".txt";
+		System.out.println("Reading from file "+fileName+"\n");
+		
+		try {
+			Files.lines(new File(fileName).toPath()).map(line -> line.trim()).forEach(employeeDetails ->{
+				System.out.println(employeeDetails);
+				addressBookList.add(employeeDetails);
+			});
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return addressBookList;
 	}
 }
