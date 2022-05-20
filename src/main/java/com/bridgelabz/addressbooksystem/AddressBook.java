@@ -6,13 +6,19 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
+
 import netscape.javascript.JSObject;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+/*import java.text.ParseException;*/
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,7 +31,7 @@ public class AddressBook {
 
     Scanner scanner = new Scanner(System.in);
     public Map<String, Contact> contactList = new HashMap<String, Contact>();
-    public ArrayList<Contact> contactList1 = new ArrayList<Contact>();
+    public JSONArray contactList2 = new JSONArray();
     public static HashMap<String, ArrayList<Contact>> city = new HashMap<String, ArrayList<Contact>>();
     public static HashMap<String, ArrayList<Contact>> state = new HashMap<String, ArrayList<Contact>>();
     public String addressBookName;
@@ -35,8 +41,6 @@ public class AddressBook {
         return addressBookName;
     }
 
-    AddressBookIOCSV addressBookIOCSV = new AddressBookIOCSV();
-
     public void setAddressBookName(String addressBookName) {
         this.addressBookName = addressBookName;
     }
@@ -45,14 +49,14 @@ public class AddressBook {
         return new ArrayList<Contact>(contactList.values());
     }
 
-    public void displayMenu() throws IOException {
+    public void displayMenu() throws IOException, ParseException {
         boolean change = true;
         do {
             System.out.println("\n Select the operation you want to perform : ");
             System.out.println(
                     "1.Add To Address Book\n2.Edit Existing Entry\n3.Delete Contact\n4.Display Address book\n5.Sort address book." +
                             "\n6.Write to file.\n7. Read data from file\n8.Write to csv file "
-                            + "\n9.Read data from file \n10.Write Data To JSONFile \n11.Exit Address book System");
+                            + "\n9.Read data from file \n10.Write Data To JSONFile \n11.Read Data From JSON File\n12.Exit Address book System");
             switch (scanner.nextInt()) {
                 case 1:
                     addContact();
@@ -80,7 +84,12 @@ public class AddressBook {
                 case 9:
                     readDataFromCSVFile();
                     break;
-
+                case 10:
+                    writeDataToJSONFile();
+                    break;
+                case 11:
+                    readDataFromJSONFile();
+                    break;
                 default:
                     change = false;
                     System.out.println("Exiting Address Book: " + this.getAddressBookName() + " !");
@@ -124,7 +133,9 @@ public class AddressBook {
             addPersonToCity(person);
             addPersonToState(person);
             contactList.put(firstName.toLowerCase(), person);
-            contactList1.add(person);
+            //contactList.add(person);
+            contactList2.add(person);
+
         }
     }
 
@@ -324,4 +335,66 @@ public class AddressBook {
             e.printStackTrace();
         }
     }
+
+    //Write JSON file
+    public void writeDataToJSONFile() {
+        try (FileWriter file = new FileWriter("Contact.json")) {
+            //We can write any JSONArray or JSONObject instance to the file
+            file.write(contactList2.toJSONString());
+            file.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void readDataFromJSONFile() throws IOException, ParseException {
+        //JSON parser object to parse read file
+        JSONParser jsonParser = new JSONParser();
+
+        try (FileReader reader = new FileReader("Contact.json")) {
+            //Read JSON file
+            Object obj = jsonParser.parse(reader);
+
+            JSONArray contactList = (JSONArray) obj;
+            System.out.println(contactList);
+
+            //Iterate over employee array
+            contactList.forEach(per -> parseEmployeeObject((JSONObject) per));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseEmployeeObject(JSONObject contact) {
+        //Get contact object within list
+        JSONObject employeeObject = (JSONObject) contact.get("contact");
+        String firstName = (String) employeeObject.get("firstName");
+        System.out.println(firstName);
+
+        String lastName = (String) employeeObject.get("lastName");
+        System.out.println(lastName);
+
+        int phoneNumber = (Integer) employeeObject.get("phoneNumber");
+        System.out.println(phoneNumber);
+
+        String email = (String) employeeObject.get("email");
+        System.out.println(lastName);
+
+        String city = (String) employeeObject.get("city");
+        System.out.println(city);
+
+        String state = (String) employeeObject.get("state");
+        System.out.println(lastName);
+
+        int zip = (Integer) employeeObject.get("zip");
+        System.out.println(zip);
+    }
 }
+

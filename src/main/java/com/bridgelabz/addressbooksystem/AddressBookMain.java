@@ -1,5 +1,7 @@
 package com.bridgelabz.addressbooksystem;
 
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 /*
@@ -15,7 +17,7 @@ public class AddressBookMain {
     static Scanner sc = new Scanner(System.in);
     static Map<String, AddressBook> addressBookDirectory = new HashMap<String, AddressBook>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
         System.out.println("-----------------Welcome to address book Program --------------------");
         System.out.println();
         System.out.println("Operation successful.");
@@ -73,7 +75,7 @@ public class AddressBookMain {
     /*
      * Adding new address book to by checking existing book is available or not
      */
-    public static void addAddressBook() throws IOException {
+    public static void addAddressBook() throws IOException, ParseException {
         AddressBook addressBook = new AddressBook();
         System.out.println("Enter the name of the Address Book you want to add");
         String bookNameToAdd = sc.next();
@@ -90,9 +92,9 @@ public class AddressBookMain {
     }
 
     /*
-     * in this method.. calling existing address book and editing them.
+     * in this method calling existing address book and editing them.
      */
-    public static void editAddressBook() throws IOException {
+    public static void editAddressBook() throws IOException, ParseException {
 
         System.out.println("Enter the Name of the Address Book which you want to edit:");
         String addressBookToEdit = sc.next();
